@@ -1,6 +1,6 @@
 defmodule PokeApiEx.Trainer.Get do
   alias Ecto.UUID
-  alias PokeApiEx.{Trainer, Repo}
+  alias PokeApiEx.{Repo, Trainer}
 
   def call(id) do
     case UUID.cast(id) do
