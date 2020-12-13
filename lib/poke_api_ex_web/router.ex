@@ -5,11 +5,22 @@ defmodule PokeApiExWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug PokeApiExWeb.Auth.Pipeline
+  end
+
   scope "/api", PokeApiExWeb do
     pipe_through :api
 
-    resources "/trainers", TrainersController, only: [:index, :create, :show, :delete, :update]
+    post "/trainers/signin", TrainersController, :sign_in
+    post "/trainers", TrainersController, :create
     get "/pokemons/:name", PokemonsController, :show
+  end
+
+  scope "/api", PokeApiExWeb do
+    pipe_through [:api, :auth]
+
+    resources "/trainers", TrainersController, only: [:index, :show, :delete, :update]
     resources "/trainer_pokemons", TrainerPokemonsController, only: [:index, :create, :show, :delete, :update]
   end
 

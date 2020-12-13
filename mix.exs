@@ -57,7 +57,8 @@ defmodule PokeApiEx.MixProject do
       {:credo, "~> 1.5.0-rc.2", only: [:dev, :test], runtime: false},
       {:pbkdf2_elixir, "~> 1.0"},
       {:tesla, "~> 1.3.0"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:guardian, "~> 2.0"}
     ]
   end
 

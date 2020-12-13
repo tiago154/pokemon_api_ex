@@ -1,9 +1,19 @@
 defmodule PokeApiExWeb.TrainersControllerTest do
   use PokeApiExWeb.ConnCase
+  import PokeApiExWeb.Auth.Guardian
 
   alias PokeApiEx.Trainer
 
   describe "show/2" do
+    setup %{conn: conn} do
+      params = %{name: "test", password: "123456"}
+      {:ok, trainer} = PokeApiEx.create_trainer(params)
+      {:ok, token, _claims} = encode_and_sign(trainer)
+
+      conn = put_req_header(conn, "authorization", "Bearer #{token}")
+      {:ok, conn: conn}
+    end
+
     test "when there is a trainer with the given id, return the trainer", %{conn: conn} do
       params = %{name: "FakeName", password: "123456"}
 

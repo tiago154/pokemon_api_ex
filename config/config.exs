@@ -26,6 +26,14 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :Poke_api_ex, PokeApiExWeb.Auth.Guardian,
+  issuer: "Poke_api_ex",
+  secret_key: "LLvUqG6FOOG3wid8GO1wVW6OcPqjKYDT3xLwgFSinLj4CSku2qEJiYkqZTkV9K/j"
+
+config :Poke_api_ex, PokeApiExWeb.Auth.Pipeline,
+  module: PokeApiExWeb.Auth.Guardian,
+  error_handler: PokeApiExWeb.Auth.ErrorHandler
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

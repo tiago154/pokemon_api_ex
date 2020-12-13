@@ -4,6 +4,15 @@ defmodule PokeApiExWeb.TrainersController do
   action_fallback PokeApiExWeb.FallbackController
 
   alias PokeApiEx.{Repo, Trainer}
+  alias PokeApiExWeb.Auth.Guardian
+
+  def sign_in(conn, params) do
+    with {:ok, token} <- Guardian.authenticate(params) do
+      conn
+      |> put_status(:ok)
+      |> render("sign_in.json", token: token)
+    end
+  end
 
   def index(conn, _params) do
     trainers = Repo.all(Trainer)
@@ -13,9 +22,12 @@ defmodule PokeApiExWeb.TrainersController do
   end
 
   def create(conn, params) do
-    params
-    |> PokeApiEx.create_trainer()
-    |> handle_response(conn, "create.json", :created)
+    with {:ok, trainer} <- PokeApiEx.create_trainer(params),
+         {:ok, token, _claims} <- Guardian.encode_and_sign(trainer) do
+      conn
+      |> put_status(:created)
+      |> render("create.json", %{trainer: trainer, token: token})
+    end
   end
 
   def delete(conn, %{"id" => id}) do
